@@ -1,0 +1,42 @@
+{
+  "extends": "next/core-web-vitals",
+  "plugins": [
+    "import"
+  ],
+  "rules": {
+    "indent": [
+      "warn",
+      2
+    ],
+    "quotes": [
+      "warn",
+      "double"
+    ],
+    "comma-dangle": [
+      "warn",
+      "always-multiline"
+    ],
+    "semi": "warn",
+    "eol-last": "warn",
+    "no-multiple-empty-lines": [
+      "warn",
+      {
+        "max": 1,
+        "maxEOF": 0,
+        "maxBOF": 0
+      }
+    ],
+    "no-unused-vars": "warn",
+    "import/newline-after-import": "warn",
+    "import/no-duplicates": "warn",
+    "import/order": [
+      "warn",
+      {
+        "alphabetize": {
+          "order": "asc"
+        },
+        "newlines-between": "never"
+      }
+    ]
+  }
+}

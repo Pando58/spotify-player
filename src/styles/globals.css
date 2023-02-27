@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-zinc-900;
+}
+
+.debug {
+  @apply outline-dashed outline-1 outline-green-400/40 outline-offset-[-1px];
+}
