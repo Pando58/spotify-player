@@ -9,3 +9,12 @@ body {
 .debug {
   @apply outline-dashed outline-1 outline-green-400/40 outline-offset-[-1px];
 }
+
+
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-white/5;
+}
