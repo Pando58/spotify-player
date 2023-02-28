@@ -1,7 +1,7 @@
 import { HeartIcon, HomeIcon, MagnifyingGlassIcon, PlusIcon, QueueListIcon } from "@heroicons/react/24/outline";
 import { useMemo } from "react";
 
-export function Sidebar() {
+export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
   const entries = useMemo(() => ([
     {
       icon: <HomeIcon />,
@@ -32,7 +32,7 @@ export function Sidebar() {
   ]), []);
 
   return (
-    <div className="h-screen w-48 overflow-y-auto border-r border-zinc-800 bg-zinc-950 py-2">
+    <div className="h-full w-48 overflow-y-auto border-r border-zinc-800 bg-zinc-950 py-2">
       <ul>
         {entries.map(({ icon, text, separator }, i) => (
           <li key={i}>
@@ -54,6 +54,12 @@ export function Sidebar() {
           </li>
         ))} */}
       </ul>
+      <div
+        className="mt-2"
+        style={{
+          height: bottomSpace + "rem",
+        }}
+      />
     </div>
   );
 }
