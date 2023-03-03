@@ -1,6 +1,11 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
   "plugins": [
+    "@typescript-eslint",
     "import",
     "tailwindcss"
   ],
@@ -31,7 +36,9 @@
       "warn",
       "never"
     ],
-    "no-unused-vars": "warn",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/consistent-type-imports": "error",
     "import/newline-after-import": "warn",
     "import/no-duplicates": "warn",
     "import/order": [
