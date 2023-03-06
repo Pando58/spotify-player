@@ -1,10 +1,24 @@
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { HeartIcon, HomeIcon, MagnifyingGlassIcon, PlusIcon, QueueListIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { useMemo } from "react";
+import { signOut, useSession } from "next-auth/react";
+import React, { useMemo, useState } from "react";
 import userImage from "@/../public/profile.jpg";
 
 export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
+  const { data } = useSession();
+  const [userMenuActive, setUserMenuActive] = useState(false);
+
+  function clickUserMenu() {
+    setUserMenuActive(prev => !prev);
+  }
+
+  function logout(e: React.MouseEvent) {
+    signOut();
+
+    e.stopPropagation();
+  }
+
   const entries = useMemo(() => ([
     {
       icon: <HomeIcon />,
@@ -36,13 +50,27 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
 
   return (
     <nav className="h-full w-48 overflow-y-auto border-r border-zinc-800 bg-zinc-950 py-2 text-xs font-medium text-zinc-400 sm:w-56 sm:text-sm">
-      <button className="mt-2 mb-4 flex w-full items-center gap-3 px-4 duration-75 hover:text-zinc-100 sm:gap-4">
+      <button
+        className="relative mt-2 mb-4 flex w-full items-center px-4 duration-75 hover:text-zinc-100"
+        onClick={clickUserMenu}
+      >
         <div className="h-6 w-6">
-          <Image src={userImage} className="rounded-full" alt="user image" />
+          {data?.user?.image &&
+            <Image src={data?.user?.image || userImage} className="rounded-full" width={24} height={24} alt="user image" />
+          }
         </div>
-        <span>John Doe</span>
+        <span className="ml-2 text-xs sm:ml-3">{data?.user?.name}</span>
         <div className="flex-1" />
         <ChevronDownIcon className="w-4" />
+        {userMenuActive && (
+          <div className="absolute inset-x-0 top-full z-10">
+            <div className="mx-4 mt-2">
+              <ul className="w-full rounded bg-zinc-900 py-1 shadow-md shadow-black/30">
+                <li className="w-full py-1 px-4 text-left text-zinc-400 hover:text-zinc-100" onClick={logout}>Log out</li>
+              </ul>
+            </div>
+          </div>
+        )}
       </button>
       <ul>
         {entries.map(({ icon, text, separator }, i) => (
