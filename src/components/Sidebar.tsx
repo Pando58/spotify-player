@@ -2,12 +2,28 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { HeartIcon, HomeIcon, MagnifyingGlassIcon, PlusIcon, QueueListIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import userImage from "@/../public/profile.jpg";
+import { useSpotify } from "@/hooks/useSpotify";
 
 export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
   const { data } = useSession();
   const [userMenuActive, setUserMenuActive] = useState(false);
+  const [playlists, setPlaylists] = useState<{ name: string; id: string }[]>([]);
+
+  const spotify = useSpotify();
+
+  useEffect(() => {
+    if (!spotify.ready) return;
+
+    spotify.api.getUserPlaylists().then(res => {
+      if (!res.ok) return;
+
+      const { value } = res;
+
+      setPlaylists(value.items.map(({ name, id }) => ({ name, id })));
+    });
+  }, [spotify]);
 
   function clickUserMenu() {
     setUserMenuActive(prev => !prev);
@@ -85,13 +101,13 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
             )}
           </li>
         ))}
-        {/* {[...Array(10)].map((_, i) => (
+        {playlists.map(({ name }, i) => (
           <li key={i}>
             <button className="flex w-full items-center gap-2 py-2 px-4 text-xs font-medium text-zinc-400 duration-75 hover:text-zinc-100 sm:text-sm">
-              <span>Playlist {i}</span>
+              <span>{name}</span>
             </button>
           </li>
-        ))} */}
+        ))}
       </ul>
       <div
         className="mt-2"
