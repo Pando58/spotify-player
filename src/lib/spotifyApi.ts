@@ -46,8 +46,12 @@ export const loginAuthURL = `https://accounts.spotify.com/authorize?${params.toS
 export const spotifyApi = (() => {
   const clientId = process.env.NEXT_PUBLIC_CLIENT_ID || "";
   const clientSecret = process.env.NEXT_PUBLIC_CLIENT_SECRET || "";
+  let accessToken = "";
 
   return {
+    setAccessToken(token: string) {
+      accessToken = token;
+    },
     async refreshAccessToken(refreshToken: string) {
       const response = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
@@ -62,16 +66,75 @@ export const spotifyApi = (() => {
         }),
       });
 
+      const res = await response.json();
+
       if (!response.ok) {
-        return err(await response.json());
+        console.log(res);
+        return err(res as {
+          error: string;
+          error_description: string;
+        });
       }
 
-      return ok(await response.json() as {
-        access_token: string,
-        token_type: string,
-        expires_in: string,
-        scope: string,
+      return ok(res as {
+        access_token: string;
+        token_type: string;
+        expires_in: string;
+        scope: string;
       });
+    },
+    async getUserPlaylists() {
+      const response = await fetch("https://api.spotify.com/v1/me/playlists"/*  + new URLSearchParams({}).toString() */, {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const res = await response.json();
+
+      if (!response.ok) {
+        return err(res as {
+          error: {
+            message: string;
+            status: number;
+          };
+        });
+      }
+
+      return ok(res as ResponseCurrentUserPlaylists);
     },
   };
 })();
+
+export type ResponseCurrentUserPlaylists = {
+  href: string;
+  limit: number;
+  offset: number;
+  next: string;
+  previous: string;
+  total: number;
+  items: {
+    collaborative: boolean;
+    description: string;
+    external_urls: {
+      spotify: string;
+    };
+    href: string;
+    id: string;
+    images: {
+      url: string;
+      height: number;
+      width: number;
+    }[];
+    name: string;
+    // owner: {}
+    public: boolean;
+    snapshot_id: string;
+    tracks: {
+      href: string;
+      total: number;
+    };
+  }[];
+};

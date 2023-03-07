@@ -1,6 +1,7 @@
-import type { User } from "next-auth";
+import type { AuthOptions, Session, User } from "next-auth";
 import NextAuth from "next-auth";
 import type { AdapterUser } from "next-auth/adapters";
+import type { JWT } from "next-auth/jwt";
 import SpotifyProvider from "next-auth/providers/spotify";
 import { loginAuthURL, spotifyApi } from "@/lib/spotifyApi";
 
@@ -21,7 +22,7 @@ async function refreshAccessToken(token: MyJWT) {
   };
 }
 
-export default NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     SpotifyProvider({
       clientId: process.env.NEXT_PUBLIC_CLIENT_ID || "",
@@ -53,22 +54,32 @@ export default NextAuth({
       // Access token has expired, try to update it
       return refreshAccessToken(token as MyJWT);
     },
-    async session({ session, token }) {
-      if (!token.user) return session;
+    async session({ session, token }): Promise<MySession> {
+      if (!token.user || !token.accessToken) return {
+        ...session,
+        user: undefined,
+      };
 
       return {
         ...session,
         user: token.user,
-        accessToken: token.accessToken,
+        accessToken: (token.accessToken as string) || "",
         // error: token.error,
       };
     },
   },
-});
+};
+
+export default NextAuth(authOptions);
 
 type MyJWT = {
-  accessToken: string | undefined,
-  refreshToken: string | undefined,
-  accessTokenExpires: number,
-  user: User | AdapterUser,
-}
+  accessToken: string | undefined;
+  refreshToken: string | undefined;
+  accessTokenExpires: number;
+  user: User | AdapterUser;
+};
+
+export type MySession = Session & {
+  user?: JWT["user"];
+  accessToken?: MyJWT["accessToken"];
+};
