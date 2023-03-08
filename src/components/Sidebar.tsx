@@ -2,14 +2,16 @@ import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { HeartIcon, HomeIcon, MagnifyingGlassIcon, PlusIcon, QueueListIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import userImage from "@/../public/profile.jpg";
+import { AppDispatchContext } from "@/context/appContext";
 import { useSpotify } from "@/hooks/useSpotify";
 
 export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
   const { data } = useSession();
   const [userMenuActive, setUserMenuActive] = useState(false);
   const [playlists, setPlaylists] = useState<{ name: string; id: string }[]>([]);
+  const dispatch = useContext(AppDispatchContext);
 
   const spotify = useSpotify();
 
@@ -23,7 +25,7 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
 
       setPlaylists(value.items.map(({ name, id }) => ({ name, id })));
     });
-  }, [spotify]);
+  }, [spotify.ready]);
 
   function clickUserMenu() {
     setUserMenuActive(prev => !prev);
@@ -33,6 +35,13 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
     signOut();
 
     e.stopPropagation();
+  }
+
+  function clickPlaylist(id: string) {
+    if (dispatch) dispatch({
+      type: "set_viewingPlaylistId",
+      playlistId: id,
+    });
   }
 
   const entries = useMemo(() => ([
@@ -101,9 +110,12 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
             )}
           </li>
         ))}
-        {playlists.map(({ name }, i) => (
+        {playlists.map(({ name, id }, i) => (
           <li key={i}>
-            <button className="flex w-full items-center gap-2 py-2 px-4 text-xs font-medium text-zinc-400 duration-75 hover:text-zinc-100 sm:text-sm">
+            <button
+              className="flex w-full items-center gap-2 py-2 px-4 text-xs font-medium text-zinc-400 duration-75 hover:text-zinc-100 sm:text-sm"
+              onClick={() => clickPlaylist(id)}
+            >
               <span>{name}</span>
             </button>
           </li>
