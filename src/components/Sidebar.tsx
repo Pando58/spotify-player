@@ -12,7 +12,6 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
   const [userMenuActive, setUserMenuActive] = useState(false);
   const [playlists, setPlaylists] = useState<{ name: string; id: string }[]>([]);
   const dispatch = useContext(AppDispatchContext);
-
   const spotify = useSpotify();
 
   useEffect(() => {

@@ -95,46 +95,51 @@ export const spotifyApi = (() => {
       const res = await response.json();
 
       if (!response.ok) {
-        return err(res as {
-          error: {
-            message: string;
-            status: number;
-          };
-        });
+        return err(res as SpotifyError);
       }
 
-      return ok(res as ResponseCurrentUserPlaylists);
+      return ok(res as SpotifyApi.ListOfCurrentUsersPlaylistsResponse);
+    },
+    async getPlaylistTracks(playlistId: string) {
+      const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`/*  + new URLSearchParams({}).toString() */, {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const res = await response.json();
+
+      if (!response.ok) {
+        return err(res as SpotifyError);
+      }
+
+      return ok(res as SpotifyApi.PlaylistTrackResponse);
+    },
+    async getPlaylist(playlistId: string) {
+      const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`/*  + new URLSearchParams({}).toString() */, {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const res = await response.json();
+
+      if (!response.ok) {
+        return err(res as SpotifyError);
+      }
+
+      return ok(res as SpotifyApi.SinglePlaylistResponse);
     },
   };
 })();
 
-export type ResponseCurrentUserPlaylists = {
-  href: string;
-  limit: number;
-  offset: number;
-  next: string;
-  previous: string;
-  total: number;
-  items: {
-    collaborative: boolean;
-    description: string;
-    external_urls: {
-      spotify: string;
-    };
-    href: string;
-    id: string;
-    images: {
-      url: string;
-      height: number;
-      width: number;
-    }[];
-    name: string;
-    // owner: {}
-    public: boolean;
-    snapshot_id: string;
-    tracks: {
-      href: string;
-      total: number;
-    };
-  }[];
+type SpotifyError = {
+  error: {
+    message: string;
+    status: number;
+  };
 };
