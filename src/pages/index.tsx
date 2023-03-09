@@ -19,7 +19,9 @@ export default function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <div className="flex h-screen">
-          <Sidebar bottomSpace={bottomBarHeight} />
+          <div className="flex-none">
+            <Sidebar bottomSpace={bottomBarHeight} />
+          </div>
           <div className="flex-1">
             <MainContainer bottomSpace={bottomBarHeight} />
           </div>

@@ -73,7 +73,7 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
   ]), []);
 
   return (
-    <nav className="h-full w-48 overflow-y-auto border-r border-zinc-800 bg-zinc-950 py-2 text-xs font-medium text-zinc-400 sm:w-56 sm:text-sm">
+    <nav className="h-full w-48 overflow-y-auto border-r border-zinc-800 bg-zinc-950 py-2 text-xs font-medium text-zinc-400 lg:w-56 lg:text-sm">
       <button
         className="relative mt-2 mb-4 flex w-full items-center px-4 duration-75 hover:text-zinc-100"
         onClick={clickUserMenu}
@@ -83,7 +83,7 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
             <Image src={data?.user?.image || userImage} className="rounded-full" width={24} height={24} alt="user image" />
           }
         </div>
-        <span className="ml-2 text-xs sm:ml-3">{data?.user?.name}</span>
+        <span className="ml-2 text-xs lg:ml-3">{data?.user?.name}</span>
         <div className="flex-1" />
         <ChevronDownIcon className="w-4" />
         {userMenuActive && (
@@ -103,7 +103,7 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
               <hr className="my-3 mx-4 border-zinc-750" />
             ) : (
               <button className="flex w-full items-center gap-2 py-2 px-4 duration-75 hover:text-zinc-100">
-                <div className="w-4 sm:w-5">{icon}</div>
+                <div className="w-4 lg:w-5">{icon}</div>
                 <span>{text}</span>
               </button>
             )}
@@ -112,7 +112,7 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
         {playlists.map(({ name, id }, i) => (
           <li key={i}>
             <button
-              className="flex w-full items-center gap-2 py-2 px-4 text-xs font-medium text-zinc-400 duration-75 hover:text-zinc-100 sm:text-sm"
+              className="flex w-full items-center gap-2 py-2 px-4 text-xs font-medium text-zinc-400 duration-75 hover:text-zinc-100 lg:text-sm"
               onClick={() => clickPlaylist(id)}
             >
               <span>{name}</span>
