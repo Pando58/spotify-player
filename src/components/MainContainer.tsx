@@ -1,5 +1,7 @@
 import { PauseIcon, PlayIcon } from "@heroicons/react/20/solid";
+// import { HeartIcon as HeartIconOutline } from "@heroicons/react/24/outline";
 import { PlayCircleIcon, PauseCircleIcon } from "@heroicons/react/24/solid";
+import palette from "image-palette";
 import moment from "moment";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
@@ -12,6 +14,7 @@ export default function MainContainer({ bottomSpace }: { bottomSpace: number }) 
   const dispatch = useContext(AppDispatchContext);
   const [playlist, setPlaylist] = useState<SpotifyApi.SinglePlaylistResponse>();
   const [tracks, setTracks] = useState<SpotifyApi.PlaylistTrackResponse>();
+  const [bgColor, setBgColor] = useState<string>();
   const spotify = useSpotify();
 
   useEffect(() => {
@@ -133,14 +136,33 @@ export default function MainContainer({ bottomSpace }: { bottomSpace: number }) 
     });
   }
 
+  function imageCoverLoaded(img: HTMLImageElement) {
+    const { colors } = palette(img, 6);
+    const color: [number, number, number, number] = colors[2];
+
+    const rgb = color.slice(0, -1).join(",");
+
+    setBgColor(rgb);
+  }
+
   return (
     <main className="relative h-full overflow-x-auto">
-      <div className="absolute inset-x-0 top-0 h-[40em] bg-gradient-to-b from-purple-900/80 to-cyan-500/0"></div>
+      <div className="absolute inset-x-0 top-0 h-[40em] duration-1000" style={{
+        backgroundColor: `rgb(${bgColor})`,
+      }}>
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 to-zinc-900/100" />
+      </div>
       <div className="relative flex min-h-screen flex-col">
         <header className="flex p-8 pt-28">
           <div className="relative h-56 w-56 bg-black/20 shadow-xl shadow-black/50">
             {playlist?.images[0] && (
-              <Image src={playlist.images[0].url} alt="playlist cover" fill sizes="224px" />
+              <Image
+                src={playlist.images[0].url}
+                fill
+                sizes="224px"
+                onLoadingComplete={imageCoverLoaded}
+                alt="playlist cover"
+              />
             )}
           </div>
           <div className="flex flex-1 flex-col justify-end pl-8 pb-4 text-white/70">
