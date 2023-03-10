@@ -153,8 +153,8 @@ export default function MainContainer({ bottomSpace }: { bottomSpace: number }) 
         <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/20 to-zinc-900/100" />
       </div>
       <div className="relative flex min-h-screen flex-col">
-        <header className="flex p-8 pt-28">
-          <div className="relative h-56 w-56 bg-black/20 shadow-xl shadow-black/50">
+        <header className="flex flex-col p-8 pt-14 sm:flex-row sm:pt-28">
+          <div className="relative h-56 w-56 self-center bg-black/20 shadow-xl shadow-black/50">
             {playlist?.images[0] && (
               <Image
                 src={playlist.images[0].url}
@@ -165,7 +165,7 @@ export default function MainContainer({ bottomSpace }: { bottomSpace: number }) 
               />
             )}
           </div>
-          <div className="flex flex-1 flex-col justify-end pl-8 pb-4 text-white/70">
+          <div className="flex flex-1 flex-col justify-end pl-0 pb-4 pt-14 text-white/70 sm:pl-8 sm:pt-0">
             <h3 className="mb-4 pl-1 text-xs font-bold tracking-wider">PLAYLIST</h3>
             <h2 className="text-6xl font-bold text-white">{playlist?.name}</h2>
             <h3 className="mt-10 pl-1 text-sm font-medium">
