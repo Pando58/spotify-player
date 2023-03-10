@@ -84,7 +84,7 @@ export const spotifyApi = (() => {
       });
     },
     async getUserPlaylists() {
-      const response = await fetch("https://api.spotify.com/v1/me/playlists"/*  + new URLSearchParams({}).toString() */, {
+      const response = await fetch("https://api.spotify.com/v1/me/playlists", {
         method: "GET",
         headers: {
           "Authorization": "Bearer " + accessToken,
@@ -101,7 +101,7 @@ export const spotifyApi = (() => {
       return ok(res as SpotifyApi.ListOfCurrentUsersPlaylistsResponse);
     },
     async getPlaylistTracks(playlistId: string) {
-      const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`/*  + new URLSearchParams({}).toString() */, {
+      const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
         method: "GET",
         headers: {
           "Authorization": "Bearer " + accessToken,
@@ -118,7 +118,7 @@ export const spotifyApi = (() => {
       return ok(res as SpotifyApi.PlaylistTrackResponse);
     },
     async getPlaylist(playlistId: string) {
-      const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`/*  + new URLSearchParams({}).toString() */, {
+      const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
         method: "GET",
         headers: {
           "Authorization": "Bearer " + accessToken,
@@ -133,6 +133,54 @@ export const spotifyApi = (() => {
       }
 
       return ok(res as SpotifyApi.SinglePlaylistResponse);
+    },
+    async getPlayingTrack() {
+      const response = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const res = await response.json();
+
+      if (!response.ok) {
+        return err(res as SpotifyError);
+      }
+
+      return ok(res as SpotifyApi.CurrentPlaybackResponse);
+    },
+    async startPlayback(params?: { context_uri: string } | { uris: string[] }) {
+      const response = await fetch("https://api.spotify.com/v1/me/player/play", {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+        body: params && JSON.stringify(params),
+      });
+
+      if (!response.ok) {
+        return err(await response.json() as SpotifyError);
+      }
+
+      return ok(null);
+    },
+    async pausePlayback() {
+      const response = await fetch("https://api.spotify.com/v1/me/player/pause", {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        return err(await response.json() as SpotifyError);
+      }
+
+      return ok(null);
     },
   };
 })();

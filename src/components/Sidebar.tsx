@@ -37,8 +37,8 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
   }
 
   function clickPlaylist(id: string) {
-    if (dispatch) dispatch({
-      type: "set_viewingPlaylistId",
+    dispatch?.({
+      type: "setViewingPlaylist",
       playlistId: id,
     });
   }

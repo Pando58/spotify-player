@@ -39,10 +39,28 @@ export default function Home() {
 
 function appContextReducer(state: AppCtxType, action: AppDispatchCtxType): AppCtxType {
   switch (action.type) {
-    case "set_viewingPlaylistId": {
+    case "setViewingPlaylist": {
       return {
         ...state,
         viewingPlaylistId: action.playlistId,
+      };
+    }
+    case "setPlayingPlaylist": {
+      return {
+        ...state,
+        playingPlaylistId: action.playlistId,
+      };
+    }
+    case "setPlayingTrack": {
+      return {
+        ...state,
+        playingTrackId: action.trackId,
+      };
+    }
+    case "setPlaying": {
+      return {
+        ...state,
+        isPlaying: action.playing,
       };
     }
     default: {
