@@ -184,6 +184,36 @@ export const spotifyApi = (() => {
 
       return ok(null);
     },
+    async skipToNext() {
+      const response = await fetch("https://api.spotify.com/v1/me/player/next", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        return err(await response.json() as SpotifyError);
+      }
+
+      return ok(null);
+    },
+    async skipToPrevious() {
+      const response = await fetch("https://api.spotify.com/v1/me/player/previous", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        return err(await response.json() as SpotifyError);
+      }
+
+      return ok(null);
+    },
   };
 })();
 
