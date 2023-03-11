@@ -1,4 +1,4 @@
-import { BackwardIcon, ForwardIcon, PlayIcon, SpeakerWaveIcon, PauseIcon, ArrowsUpDownIcon, ArrowUturnLeftIcon } from "@heroicons/react/20/solid";
+import { BackwardIcon, ForwardIcon, PlayIcon, PauseIcon, ArrowsUpDownIcon, ArrowUturnLeftIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import VolumeSlider from "./volumeSlider";
@@ -116,7 +116,6 @@ export default function Player({
           <div className="flex h-full items-center justify-end gap-2">
             <button className="hover:text-white"><ArrowsUpDownIcon className="w-5" /></button>
             <button className="hover:text-white"><ArrowUturnLeftIcon className="mr-2 w-4" /></button>
-            <button className="hover:text-white"><SpeakerWaveIcon className="w-5" /></button>
             <VolumeSlider />
           </div>
         </div>
