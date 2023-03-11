@@ -143,7 +143,9 @@ export const spotifyApi = (() => {
         },
       });
 
-      const res = await response.json();
+      const res = await response.json().catch(err => console.error(err));
+
+      if (!res) return err(null);
 
       if (!response.ok) {
         return err(res as SpotifyError);

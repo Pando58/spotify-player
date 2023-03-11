@@ -101,7 +101,7 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
             >
               <div className="relative h-6 w-6">
                 {data?.user?.image &&
-                  <Image src={data?.user?.image || userImage} className="rounded-full" fill alt="user image" />
+                  <Image src={data?.user?.image || userImage} className="rounded-full" fill sizes="48px" alt="user image" />
                 }
               </div>
               <span className="ml-2 text-xs lg:ml-3">{data?.user?.name}</span>

@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useContext, useReducer } from "react";
 import MainContainer from "@/components/MainContainer";
 import { Sidebar } from "@/components/Sidebar";
+import Player from "@/components/player/Player";
 import type { AppCtxType, AppDispatchCtxType } from "@/context/appContext";
 import { AppDispatchContext, AppContext } from "@/context/appContext";
 
@@ -26,12 +27,7 @@ export default function Home() {
             <MainContainer bottomSpace={bottomBarHeight} />
           </div>
         </div>
-        <div
-          className="absolute inset-x-0 bottom-0 overflow-hidden border-t border-zinc-850 bg-black/20 shadow-t-lg shadow-black/20 backdrop-blur-md"
-          style={{ height: bottomBarHeight + "rem" }}
-        >
-          {/*  */}
-        </div>
+        <Player barHeight={bottomBarHeight} />
       </AppDispatchContext.Provider>
     </AppContext.Provider>
   );
