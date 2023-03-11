@@ -1,8 +1,17 @@
 import { useRef, useState } from "react";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useSpotify } from "@/hooks/useSpotify";
 
 export default function VolumeSlider() {
   const inputRef = useRef<HTMLInputElement>(null!);
-  const [vol, setVol] = useState(50);
+  const [volume, setVolume] = useState(50);
+  const spotify = useSpotify();
+
+  function adjustVolume() {
+    spotify.api.setVolume(volume);
+  }
+
+  useDebounce(adjustVolume, [volume], 300);
 
   return (
     <div className="relative w-28">
@@ -10,7 +19,7 @@ export default function VolumeSlider() {
         <div
           className="h-full rounded-full bg-white"
           style={{
-            width: vol + "%",
+            width: volume + "%",
             // width: (6 + vol * 0.88) + "%",
           }}
         />
@@ -21,7 +30,7 @@ export default function VolumeSlider() {
         type="range"
         min={0}
         max={100}
-        onChange={e => setVol(Number(e.target.value))}
+        onChange={e => setVolume(Number(e.target.value))}
       />
     </div>
   );

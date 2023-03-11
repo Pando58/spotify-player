@@ -214,6 +214,23 @@ export const spotifyApi = (() => {
 
       return ok(null);
     },
+    async setVolume(volume: number) {
+      const response = await fetch("https://api.spotify.com/v1/me/player/volume?" + new URLSearchParams({
+        volume_percent: volume.toString(),
+      }).toString(), {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        return err(await response.json() as SpotifyError);
+      }
+
+      return ok(null);
+    },
   };
 })();
 
