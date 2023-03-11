@@ -231,6 +231,40 @@ export const spotifyApi = (() => {
 
       return ok(null);
     },
+    async setRepeat(on: boolean) {
+      const response = await fetch("https://api.spotify.com/v1/me/player/repeat?" + new URLSearchParams({
+        state: on ? "context" : "off",
+      }).toString(), {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        return err(await response.json() as SpotifyError);
+      }
+
+      return ok(null);
+    },
+    async setShuffle(on: boolean) {
+      const response = await fetch("https://api.spotify.com/v1/me/player/shuffle?" + new URLSearchParams({
+        state: on.toString(),
+      }).toString(), {
+        method: "PUT",
+        headers: {
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        return err(await response.json() as SpotifyError);
+      }
+
+      return ok(null);
+    },
   };
 })();
 

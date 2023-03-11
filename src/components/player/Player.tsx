@@ -1,6 +1,8 @@
-import { BackwardIcon, ForwardIcon, PlayIcon, PauseIcon, ArrowsUpDownIcon, ArrowUturnLeftIcon } from "@heroicons/react/20/solid";
+import { BackwardIcon, ForwardIcon, PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
+import RepeatButton from "./RepeatButton";
+import ShuffleButton from "./ShuffleButton";
 import VolumeSlider from "./volumeSlider";
 import { AppContext, AppDispatchContext } from "@/context/appContext";
 import { useSpotify } from "@/hooks/useSpotify";
@@ -114,8 +116,10 @@ export default function Player({
         </div>
         <div className="flex-1 p-5">
           <div className="flex h-full items-center justify-end gap-2">
-            <button className="hover:text-white"><ArrowsUpDownIcon className="w-5" /></button>
-            <button className="hover:text-white"><ArrowUturnLeftIcon className="mr-2 w-4" /></button>
+            <ShuffleButton />
+            <div className="mr-2">
+              <RepeatButton />
+            </div>
             <VolumeSlider />
           </div>
         </div>
