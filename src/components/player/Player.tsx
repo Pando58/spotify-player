@@ -1,12 +1,13 @@
 import { BackwardIcon, ForwardIcon, PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import RepeatButton from "./RepeatButton";
 import ShuffleButton from "./ShuffleButton";
 import VolumeSlider from "./volumeSlider";
 import { AppContext, AppDispatchContext } from "@/context/appContext";
 import { useSpotify } from "@/hooks/useSpotify";
 import { msToSongTime } from "@/lib/msToSongTime";
+import { updatePlaybackState } from "@/lib/updatePlaybackState";
 
 export default function Player({
   barHeight,
@@ -15,40 +16,16 @@ export default function Player({
 }) {
   const appCtx = useContext(AppContext);
   const dispatch = useContext(AppDispatchContext);
-
-  const [playingTrack, setPlayingTrack] = useState<SpotifyApi.CurrentPlaybackResponse>();
   const spotify = useSpotify();
 
-  useEffect(() => {
-    if (!spotify.ready) return;
-
-    spotify.api.getPlayingTrack().then(res => {
-      if (!res.ok) return;
-
-      const { value } = res;
-
-      setPlayingTrack(value);
-    });
-  }, [spotify.ready]);
-
   function play() {
-    if (appCtx.isPlaying) {
-      spotify.api.pausePlayback().then(() => {
-        dispatch?.({
-          type: "setPlaying",
-          playing: false,
-        });
-      });
+    if (appCtx.playbackState?.is_playing) {
+      spotify.api.pausePlayback().then(() => updatePlaybackState(spotify.api, dispatch));
 
       return;
     }
 
-    spotify.api.startPlayback().then(() => {
-      dispatch?.({
-        type: "setPlaying",
-        playing: true,
-      });
-    });
+    spotify.api.startPlayback().then(() => updatePlaybackState(spotify.api, dispatch));
   }
 
   function clickPrevious() {
@@ -67,13 +44,13 @@ export default function Player({
       <div className="flex h-full text-xs font-medium text-white/70">
         <div className="flex h-full flex-1 p-5">
           <div className="relative aspect-square h-full shadow-lg shadow-black/50">
-            {(playingTrack?.item?.type === "track" && playingTrack.item.album.images?.[0].url) && (
-              <Image src={playingTrack?.item.album.images[0].url} fill sizes="128px" alt="playing track cover image" />
+            {(appCtx.playbackState?.item?.type === "track" && appCtx.playbackState.item.album.images?.[0].url) && (
+              <Image src={appCtx.playbackState.item.album.images[0].url} fill sizes="128px" alt="playing track cover image" />
             )}
           </div>
           <div className="flex flex-col justify-center gap-1 px-4">
-            <div className="text-sm text-white">{playingTrack?.item?.name}</div>
-            <div>{playingTrack?.item?.type === "track" && playingTrack.item.artists.map((i => i.name)).join(", ")}</div>
+            <div className="text-sm text-white">{appCtx.playbackState?.item?.name}</div>
+            <div>{appCtx.playbackState?.item?.type === "track" && appCtx.playbackState.item.artists.map((i => i.name)).join(", ")}</div>
           </div>
         </div>
         <div className="flex flex-col justify-center gap-2">
@@ -88,7 +65,7 @@ export default function Player({
               className="text-white"
               onClick={play}
             >
-              {appCtx.isPlaying ? (
+              {appCtx.playbackState?.is_playing ? (
                 <PauseIcon className="w-6" />
               ) : (
                 <PlayIcon className="w-6" />
@@ -102,16 +79,16 @@ export default function Player({
             </button>
           </div>
           <div className="mb-1 flex items-center gap-2">
-            <span>{msToSongTime(playingTrack?.progress_ms || 0)}</span>
+            <span>{msToSongTime(appCtx.playbackState?.progress_ms || 0)}</span>
             <div className="h-1 w-[40vw] rounded-full bg-gray-500">
               <div
                 className="h-full rounded-full bg-white"
                 style={{
-                  width: ((playingTrack?.progress_ms || 0) / (playingTrack?.item?.duration_ms || 1) * 100) + "%",
+                  width: ((appCtx.playbackState?.progress_ms || 0) / (appCtx.playbackState?.item?.duration_ms || 1) * 100) + "%",
                 }}
               />
             </div>
-            <span>{msToSongTime(playingTrack?.item?.duration_ms || 0)}</span>
+            <span>{msToSongTime(appCtx.playbackState?.item?.duration_ms || 0)}</span>
           </div>
         </div>
         <div className="flex-1 p-5">

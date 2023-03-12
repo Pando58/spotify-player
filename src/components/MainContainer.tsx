@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext, AppDispatchContext } from "@/context/appContext";
 import { useSpotify } from "@/hooks/useSpotify";
 import { msToSongTime } from "@/lib/msToSongTime";
+import { updatePlaybackState } from "@/lib/updatePlaybackState";
 
 export default function MainContainer({ bottomSpace }: { bottomSpace: number }) {
   const appCtx = useContext(AppContext);
@@ -29,111 +30,48 @@ export default function MainContainer({ bottomSpace }: { bottomSpace: number }) 
       if (!res.ok) return;
       setTracks(res.value);
     });
-  }, [spotify.ready, appCtx]);
+  }, [spotify.ready, appCtx.viewingPlaylistId]);
+
+  function update() {
+    updatePlaybackState(spotify.api, dispatch);
+  }
 
   function playPlaylist() {
     if (!playlist) return;
 
-    if (appCtx.isPlaying) {
-      spotify.api.pausePlayback().then(() => {
-        dispatch?.({
-          type: "setPlaying",
-          playing: false,
-        });
-      });
-
-      return;
-    }
-
     if (appCtx.playingPlaylistId === playlist?.id) {
-      spotify.api.startPlayback().then(() => {
-        dispatch?.({
-          type: "setPlaying",
-          playing: true,
-        });
-      });
+      if (appCtx.playbackState?.is_playing) {
+        spotify.api.pausePlayback().then(update);
+        return;
+      }
 
+      spotify.api.startPlayback().then(update);
       return;
     }
 
-    spotify.api.startPlayback({ context_uri: playlist.uri }).then(() => {
-      dispatch?.({
-        type: "setPlaying",
-        playing: true,
-      });
-
-      dispatch?.({
-        type: "setPlayingPlaylist",
-        playlistId: playlist.id,
-      });
-
-      spotify.api.getPlayingTrack().then(res => {
-        if (!res.ok) return;
-
-        const id = res.value.item?.id;
-
-        if (id) dispatch?.({
-          type: "setPlayingTrack",
-          trackId: id.replace("spotify:track:", ""),
-        });
-      });
-    });
+    spotify.api.startPlayback({ context_uri: playlist.uri }).then(update);
   }
 
   function playTrack(id: string | undefined) {
-    if (!id || !spotify.ready) return;
+    if (!id || !playlist || !spotify.ready) return;
 
     const idTrimmed = id.replace("spotify:track:", "");
 
-    if (appCtx.isPlaying && appCtx.playingTrackId === idTrimmed) {
-      spotify.api.pausePlayback().then(() => {
-        dispatch?.({
-          type: "setPlaying",
-          playing: false,
-        });
-      });
+    if (appCtx.playbackState?.item?.id === idTrimmed) {
+      if (appCtx.playbackState?.is_playing) {
+        spotify.api.pausePlayback().then(update);
+        return;
+      }
 
+      spotify.api.startPlayback().then(update);
       return;
     }
 
-    // PLAYING A DIFERENT SONG DOES NOT WORK
-
-    if (appCtx.playingTrackId === idTrimmed) {
-      spotify.api.startPlayback().then(() => {
-        dispatch?.({
-          type: "setPlaying",
-          playing: true,
-        });
-      });
-
-      return;
-    }
-
-    spotify.api.startPlayback({ uris: [id] }).then(() => {
-      dispatch?.({
-        type: "setPlaying",
-        playing: true,
-      });
-
-      if (playlist) dispatch?.({
-        type: "setPlayingPlaylist",
-        playlistId: playlist.id,
-      });
-
-      dispatch?.({
-        type: "setPlayingTrack",
-        trackId: idTrimmed,
-      });
-    });
+    spotify.api.startPlayback({ uris: [id] }).then(update);
   }
 
   function pause() {
-    spotify.api.pausePlayback().then(() => {
-      dispatch?.({
-        type: "setPlaying",
-        playing: false,
-      });
-    });
+    spotify.api.pausePlayback().then(update);
   }
 
   function imageCoverLoaded(img: HTMLImageElement) {
@@ -181,7 +119,7 @@ export default function MainContainer({ bottomSpace }: { bottomSpace: number }) 
               className="duration-100 hover:text-white"
               onClick={playPlaylist}
             >
-              {appCtx.isPlaying && appCtx.playingPlaylistId === playlist?.id ? (
+              {appCtx.playbackState?.is_playing && appCtx.playingPlaylistId === playlist?.id ? (
                 <PauseCircleIcon className="w-12" />
               ) : (
                 <PlayCircleIcon className="w-12" />
@@ -209,7 +147,7 @@ export default function MainContainer({ bottomSpace }: { bottomSpace: number }) 
                     >
                       <td className="px-4">
                         <div className="w-4 text-center">
-                          {appCtx.isPlaying && appCtx.playingPlaylistId === playlist?.id && appCtx.playingTrackId === track.track?.id ? (
+                          {appCtx.playbackState?.is_playing && appCtx.playingPlaylistId === playlist?.id && appCtx.playbackState.item?.id === track.track?.id ? (
                             <button
                               className="duration-100 hover:text-white"
                               onClick={() => pause()}

@@ -1,14 +1,22 @@
 import Head from "next/head";
-import { useContext, useReducer } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import MainContainer from "@/components/MainContainer";
 import { Sidebar } from "@/components/Sidebar";
 import Player from "@/components/player/Player";
-import type { AppCtxType, AppDispatchCtxType } from "@/context/appContext";
-import { AppDispatchContext, AppContext } from "@/context/appContext";
+import { appContextReducer, AppDispatchContext, AppContext } from "@/context/appContext";
+import { useSpotify } from "@/hooks/useSpotify";
+import { updatePlaybackState } from "@/lib/updatePlaybackState";
 
 export default function Home() {
   const ctx = useContext(AppContext);
   const [appCtx, dispatch] = useReducer(appContextReducer, ctx);
+  const spotify = useSpotify();
+
+  useEffect(() => {
+    if (!spotify.ready) return;
+
+    updatePlaybackState(spotify.api, dispatch);
+  }, [spotify.ready]);
 
   const bottomBarHeight = 6;
 
@@ -31,36 +39,4 @@ export default function Home() {
       </AppDispatchContext.Provider>
     </AppContext.Provider>
   );
-}
-
-function appContextReducer(state: AppCtxType, action: AppDispatchCtxType): AppCtxType {
-  switch (action.type) {
-    case "setViewingPlaylist": {
-      return {
-        ...state,
-        viewingPlaylistId: action.playlistId,
-      };
-    }
-    case "setPlayingPlaylist": {
-      return {
-        ...state,
-        playingPlaylistId: action.playlistId,
-      };
-    }
-    case "setPlayingTrack": {
-      return {
-        ...state,
-        playingTrackId: action.trackId,
-      };
-    }
-    case "setPlaying": {
-      return {
-        ...state,
-        isPlaying: action.playing,
-      };
-    }
-    default: {
-      throw Error("Unknown action: " + action);
-    }
-  }
 }
