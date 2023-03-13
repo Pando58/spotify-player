@@ -1,11 +1,11 @@
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/20/solid";
 import type { ChangeEvent } from "react";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import Slider from "../Slider";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSpotify } from "@/hooks/useSpotify";
 
 export default function VolumeSlider() {
-  const inputRef = useRef<HTMLInputElement>(null!);
   const [volume, setVolume] = useState(50);
   const [muted, setMuted] = useState(false);
   const spotify = useSpotify();
@@ -33,25 +33,15 @@ export default function VolumeSlider() {
           <SpeakerXMarkIcon className="w-5" />
         )}
       </button>
-      <div className={"relative w-28 " + (muted ? "opacity-60" : "")}>
-        <div className="h-1 w-full rounded-full bg-gray-500">
-          <div
-            className="h-full rounded-full bg-white"
-            style={{
-              width: volume + "%",
-              // width: (6 + vol * 0.88) + "%",
-            }}
-          />
-        </div>
-        <input
-          className='range-sm absolute top-0 left-0 h-1 w-full opacity-0'
-          ref={inputRef}
-          type="range"
+      <div className={"w-28 " + (muted ? "opacity-60" : "")}>
+        <Slider
           min={0}
           max={100}
+          val={volume}
           onChange={volumeChange}
         />
       </div>
+      <span className="w-[4ch] text-left">{volume}%</span>
     </>
   );
 }

@@ -6,6 +6,24 @@ body {
   @apply bg-zinc-900;
 }
 
+@layer components {
+  input[type="range"].slider {
+    @apply appearance-none bg-transparent;
+  }
+
+  input[type="range"].slider::-webkit-slider-thumb {
+    @apply appearance-none w-2.5 h-2.5 rounded-full bg-white;
+  }
+
+  input[type="range"].slider::-moz-range-thumb {
+    @apply appearance-none w-2.5 h-2.5 rounded-full bg-white;
+  }
+
+  input[type="range"].slider::-ms-thumb {
+    @apply appearance-none w-2.5 h-2.5 rounded-full bg-white;
+  }
+}
+
 .debug {
   @apply outline-dashed outline-1 outline-green-400/40 outline-offset-[-1px];
 }
