@@ -67,7 +67,7 @@ export default function MainContainer({ bottomSpace }: { bottomSpace: number }) 
       return;
     }
 
-    spotify.api.startPlayback({ uris: [id] }).then(update);
+    spotify.api.startPlayback({ context_uri: playlist.uri, offset: { uri: id } }).then(update);
   }
 
   function pause() {

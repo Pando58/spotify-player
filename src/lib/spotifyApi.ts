@@ -153,7 +153,12 @@ export const spotifyApi = (() => {
 
       return ok(res as SpotifyApi.CurrentPlaybackResponse);
     },
-    async startPlayback(params?: { context_uri: string } | { uris: string[] }) {
+    async startPlayback(params?: {
+      context_uri: string;
+      offset?: { position: number } | { uri: string };
+    } | {
+      uris: string[];
+    }) {
       const response = await fetch("https://api.spotify.com/v1/me/player/play", {
         method: "PUT",
         headers: {
