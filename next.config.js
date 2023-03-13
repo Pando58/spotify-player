@@ -5,6 +5,10 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "**",
+      },
+      /* {
+        protocol: "https",
         hostname: "platform-lookaside.fbsbx.com",
         pathname: "/platform/profilepic/**",
       },
@@ -12,7 +16,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "i.scdn.co",
         pathname: "/image/**",
-      },
+      }, */
     ],
   },
 };
