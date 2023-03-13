@@ -1,5 +1,3 @@
-import { err, ok } from "./Result";
-
 const scopes = [
   //    Images
   // "ugc-image-upload",
@@ -68,20 +66,17 @@ export const spotifyApi = (() => {
 
       const res = await response.json();
 
-      if (!response.ok) {
-        console.log(res);
-        return err(res as {
-          error: string;
-          error_description: string;
-        });
-      }
+      if (!response.ok) throw res as {
+        error: string;
+        error_description: string;
+      };
 
-      return ok(res as {
+      return res as {
         access_token: string;
         token_type: string;
         expires_in: string;
         scope: string;
-      });
+      };
     },
     async getUserPlaylists() {
       const response = await fetch("https://api.spotify.com/v1/me/playlists", {
@@ -94,11 +89,9 @@ export const spotifyApi = (() => {
 
       const res = await response.json();
 
-      if (!response.ok) {
-        return err(res as SpotifyError);
-      }
+      if (!response.ok) throw res as SpotifyError;
 
-      return ok(res as SpotifyApi.ListOfCurrentUsersPlaylistsResponse);
+      return res as SpotifyApi.ListOfCurrentUsersPlaylistsResponse;
     },
     async getPlaylistTracks(playlistId: string) {
       const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
@@ -111,11 +104,9 @@ export const spotifyApi = (() => {
 
       const res = await response.json();
 
-      if (!response.ok) {
-        return err(res as SpotifyError);
-      }
+      if (!response.ok) throw res as SpotifyError;
 
-      return ok(res as SpotifyApi.PlaylistTrackResponse);
+      return res as SpotifyApi.PlaylistTrackResponse;
     },
     async getPlaylist(playlistId: string) {
       const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}`, {
@@ -128,11 +119,9 @@ export const spotifyApi = (() => {
 
       const res = await response.json();
 
-      if (!response.ok) {
-        return err(res as SpotifyError);
-      }
+      if (!response.ok) throw res as SpotifyError;
 
-      return ok(res as SpotifyApi.SinglePlaylistResponse);
+      return res as SpotifyApi.SinglePlaylistResponse;
     },
     async getPlayingTrack() {
       const response = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
@@ -143,15 +132,11 @@ export const spotifyApi = (() => {
         },
       });
 
-      const res = await response.json().catch(err => console.error(err));
+      const res = await response.json();
 
-      if (!res) return err(null);
+      if (!response.ok) throw res as SpotifyError;
 
-      if (!response.ok) {
-        return err(res as SpotifyError);
-      }
-
-      return ok(res as SpotifyApi.CurrentPlaybackResponse);
+      return res as SpotifyApi.CurrentPlaybackResponse;
     },
     async startPlayback(params?: {
       context_uri: string;
@@ -169,10 +154,8 @@ export const spotifyApi = (() => {
       });
 
       if (!response.ok) {
-        return err(await response.json() as SpotifyError);
+        throw await response.json() as SpotifyError;
       }
-
-      return ok(null);
     },
     async pausePlayback() {
       const response = await fetch("https://api.spotify.com/v1/me/player/pause", {
@@ -184,10 +167,8 @@ export const spotifyApi = (() => {
       });
 
       if (!response.ok) {
-        return err(await response.json() as SpotifyError);
+        throw await response.json() as SpotifyError;
       }
-
-      return ok(null);
     },
     async skipToNext() {
       const response = await fetch("https://api.spotify.com/v1/me/player/next", {
@@ -199,10 +180,8 @@ export const spotifyApi = (() => {
       });
 
       if (!response.ok) {
-        return err(await response.json() as SpotifyError);
+        throw await response.json() as SpotifyError;
       }
-
-      return ok(null);
     },
     async skipToPrevious() {
       const response = await fetch("https://api.spotify.com/v1/me/player/previous", {
@@ -214,10 +193,8 @@ export const spotifyApi = (() => {
       });
 
       if (!response.ok) {
-        return err(await response.json() as SpotifyError);
+        throw await response.json() as SpotifyError;
       }
-
-      return ok(null);
     },
     async setVolume(volume: number) {
       const response = await fetch("https://api.spotify.com/v1/me/player/volume?" + new URLSearchParams({
@@ -231,10 +208,8 @@ export const spotifyApi = (() => {
       });
 
       if (!response.ok) {
-        return err(await response.json() as SpotifyError);
+        throw await response.json() as SpotifyError;
       }
-
-      return ok(null);
     },
     async setRepeat(on: boolean) {
       const response = await fetch("https://api.spotify.com/v1/me/player/repeat?" + new URLSearchParams({
@@ -248,10 +223,8 @@ export const spotifyApi = (() => {
       });
 
       if (!response.ok) {
-        return err(await response.json() as SpotifyError);
+        throw await response.json() as SpotifyError;
       }
-
-      return ok(null);
     },
     async setShuffle(on: boolean) {
       const response = await fetch("https://api.spotify.com/v1/me/player/shuffle?" + new URLSearchParams({
@@ -265,10 +238,8 @@ export const spotifyApi = (() => {
       });
 
       if (!response.ok) {
-        return err(await response.json() as SpotifyError);
+        throw await response.json() as SpotifyError;
       }
-
-      return ok(null);
     },
   };
 })();

@@ -19,11 +19,7 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
     if (!spotify.ready) return;
 
     spotify.api.getUserPlaylists().then(res => {
-      if (!res.ok) return;
-
-      const { value } = res;
-
-      setPlaylists(value.items.map(({ name, id }) => ({ name, id })));
+      setPlaylists(res.items.map(({ name, id }) => ({ name, id })));
     });
   }, [spotify.ready]);
 

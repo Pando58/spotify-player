@@ -22,13 +22,11 @@ export default function MainContainer({ bottomSpace }: { bottomSpace: number }) 
     if (!spotify.ready || !appCtx.viewingPlaylistId) return;
 
     spotify.api.getPlaylist(appCtx.viewingPlaylistId).then(res => {
-      if (!res.ok) return;
-      setPlaylist(res.value);
+      setPlaylist(res);
     });
 
     spotify.api.getPlaylistTracks(appCtx.viewingPlaylistId).then(res => {
-      if (!res.ok) return;
-      setTracks(res.value);
+      setTracks(res);
     });
   }, [spotify.ready, appCtx.viewingPlaylistId]);
 

@@ -6,19 +6,17 @@ import SpotifyProvider from "next-auth/providers/spotify";
 import { loginAuthURL, spotifyApi } from "@/lib/spotifyApi";
 
 async function refreshAccessToken(token: MyJWT) {
-  const result = await spotifyApi.refreshAccessToken(token.refreshToken as string || "");
+  const res = await spotifyApi.refreshAccessToken(token.refreshToken as string || "").catch(err => {
+    console.error(err);
+    return null;
+  });
 
-  if (!result.ok) {
-    console.error(result.error);
-    return token;
-  }
-
-  const response = result.value;
+  if (!res) return token;
 
   return {
     ...token,
-    accessToken: response.access_token,
-    accessTokenExpires: (+response.expires_in || 0) * 1000,
+    accessToken: res.access_token,
+    accessTokenExpires: (+res.expires_in || 0) * 1000,
   };
 }
 

@@ -6,23 +6,19 @@ export function updatePlaybackState(spotify: typeof spotifyApi, dispatch: Dispat
   if (!dispatch) return;
 
   spotify.getPlayingTrack().then(res => {
-    if (!res.ok) return;
-
     dispatch({
       type: "setPlaybackState",
-      state: res.value,
+      state: res,
     });
 
-    if (res.value.context?.type !== "playlist" || res.value.item?.type !== "track") return;
+    if (res.context?.type !== "playlist" || res.item?.type !== "track") return;
 
-    const playlistId = res.value.context.uri.replace("spotify:playlist:", "");
+    const playlistId = res.context.uri.replace("spotify:playlist:", "");
 
     spotify.getPlaylist(playlistId).then(res => {
-      if (!res.ok) return;
-
       dispatch({
         type: "setPlayingPlaylist",
-        playlistId: res.value.id,
+        playlistId: res.id,
       });
     });
   });
