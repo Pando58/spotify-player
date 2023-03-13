@@ -78,8 +78,11 @@ export const spotifyApi = (() => {
         scope: string;
       };
     },
-    async getUserPlaylists() {
-      const response = await fetch("https://api.spotify.com/v1/me/playlists", {
+    async getUserPlaylists(offset: number, limit: number) {
+      const response = await fetch("https://api.spotify.com/v1/me/playlists?" + new URLSearchParams({
+        offset: offset.toString(),
+        limit: limit.toString(),
+      }).toString(), {
         method: "GET",
         headers: {
           "Authorization": "Bearer " + accessToken,

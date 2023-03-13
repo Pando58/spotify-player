@@ -2,26 +2,17 @@ import { Bars3Icon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { HeartIcon, HomeIcon, MagnifyingGlassIcon, PlusIcon, QueueListIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import userImage from "@/../public/profile.jpg";
 import { AppDispatchContext } from "@/context/appContext";
-import { useSpotify } from "@/hooks/useSpotify";
+import { useLoadPlaylists } from "@/hooks/useLoadPlaylists";
 
 export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
-  const { data } = useSession();
+  const dispatch = useContext(AppDispatchContext);
   const [userMenuActive, setUserMenuActive] = useState(false);
   const [smMenuActive, setSmMenuActive] = useState(false);
-  const [playlists, setPlaylists] = useState<{ name: string; id: string }[]>([]);
-  const dispatch = useContext(AppDispatchContext);
-  const spotify = useSpotify();
-
-  useEffect(() => {
-    if (!spotify.ready) return;
-
-    spotify.api.getUserPlaylists().then(res => {
-      setPlaylists(res.items.map(({ name, id }) => ({ name, id })));
-    });
-  }, [spotify.ready]);
+  const { playlists, gotAllPlaylists, loadNextPlaylistSet } = useLoadPlaylists();
+  const { data } = useSession();
 
   function clickUserMenu() {
     setUserMenuActive(prev => !prev);
@@ -96,9 +87,9 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
               onClick={clickUserMenu}
             >
               <div className="relative h-6 w-6">
-                {data?.user?.image &&
+                {data?.user?.image && (
                   <Image src={data?.user?.image || userImage} className="rounded-full" fill sizes="48px" alt="user image" />
-                }
+                )}
               </div>
               <span className="ml-2 text-xs lg:ml-3">{data?.user?.name}</span>
               <div className="flex-1" />
@@ -136,6 +127,16 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
                   </button>
                 </li>
               ))}
+              {!gotAllPlaylists && (
+                <li>
+                  <button
+                    className="mt-3 ml-2 p-2 text-xs text-zinc-400/80 duration-75 hover:text-zinc-300"
+                    onClick={loadNextPlaylistSet}
+                  >
+                    Load more
+                  </button>
+                </li>
+              )}
             </ul>
             <div
               className="mt-2"
