@@ -10,7 +10,7 @@ export default function Slider({
   min?: number;
   max?: number;
   val?: number;
-  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }) {
   const [value, setValue] = useState(processValue(val || 0));
 
@@ -21,7 +21,7 @@ export default function Slider({
   function inputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const val = processValue(Number(e.target.value));
     setValue(val);
-    onChange(e);
+    onChange?.(e);
   }
 
   return (
