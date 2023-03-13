@@ -5,6 +5,7 @@ import RepeatButton from "./RepeatButton";
 import ShuffleButton from "./ShuffleButton";
 import VolumeSlider from "./volumeSlider";
 import { AppContext, AppDispatchContext } from "@/context/appContext";
+import { usePlaybackProgress } from "@/hooks/usePlaybackProgress";
 import { useSpotify } from "@/hooks/useSpotify";
 import { msToSongTime } from "@/lib/msToSongTime";
 import { updatePlaybackState } from "@/lib/updatePlaybackState";
@@ -17,6 +18,7 @@ export default function Player({
   const appCtx = useContext(AppContext);
   const dispatch = useContext(AppDispatchContext);
   const spotify = useSpotify();
+  const progress = usePlaybackProgress();
 
   function play() {
     if (appCtx.playbackState?.is_playing) {
@@ -79,12 +81,12 @@ export default function Player({
             </button>
           </div>
           <div className="mb-1 flex items-center gap-2">
-            <span>{msToSongTime(appCtx.playbackState?.progress_ms || 0)}</span>
+            <span>{msToSongTime(progress)}</span>
             <div className="h-1 w-[40vw] rounded-full bg-gray-500">
               <div
                 className="h-full rounded-full bg-white"
                 style={{
-                  width: ((appCtx.playbackState?.progress_ms || 0) / (appCtx.playbackState?.item?.duration_ms || 1) * 100) + "%",
+                  width: (progress / (appCtx.playbackState?.item?.duration_ms || 1) * 100) + "%",
                 }}
               />
             </div>
