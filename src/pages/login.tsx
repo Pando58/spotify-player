@@ -2,12 +2,23 @@ import Image from "next/image";
 import type { BuiltInProviderType } from "next-auth/providers";
 import type { ClientSafeProvider, LiteralUnion } from "next-auth/react";
 import { getProviders, signIn } from "next-auth/react";
+import loginBg from "@/../public/loginBg.png";
 import spotifyLogo from "@/../public/spotifyLogoGreenWhite.svg";
 
 export default function Login({ providers }: { providers: Providers }) {
   return (
-    <div className="grid h-screen place-items-center">
-      <div className="flex flex-col">
+    <div
+      className="grid h-screen place-items-center"
+    >
+      <div className="absolute inset-0">
+        <Image
+          src={loginBg}
+          alt="background image"
+          fill
+          className="object-cover opacity-60 blur-xl"
+        />
+      </div>
+      <div className="relative flex flex-col">
         <div className="relative h-36 w-72 sm:w-96">
           <Image
             src={spotifyLogo}
@@ -41,4 +52,4 @@ export async function getServerSideProps() {
   };
 }
 
-type Providers = Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>
+type Providers = Record<LiteralUnion<BuiltInProviderType, string>, ClientSafeProvider>;
