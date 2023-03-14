@@ -135,6 +135,8 @@ export const spotifyApi = (() => {
         },
       });
 
+      if (response.status === 204) throw "Playback not available or active";
+
       const res = await response.json();
 
       if (!response.ok) throw res as SpotifyError;
