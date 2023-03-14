@@ -8,18 +8,18 @@ export function useSpotify() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (status !== "authenticated") {
+    if (status === "loading") {
       return;
     }
 
-    if (status === "authenticated" && !data?.user) {
+    const accessToken = (data as MySession).accessToken;
+
+    if (
+      status === "unauthenticated"
+      || (status === "authenticated" && !data?.user)
+      || !accessToken
+    ) {
       signIn();
-      return;
-    }
-
-    const accessToken = (data as MySession).accessToken || null;
-
-    if (!accessToken) {
       return;
     }
 
