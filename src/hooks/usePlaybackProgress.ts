@@ -44,7 +44,7 @@ export function usePlaybackProgress() {
     if (!appCtx.playbackState) return;
 
     setStartProgress(appCtx.playbackState.progress_ms);
-  }, [appCtx.playbackState?.is_playing]);
+  }, [appCtx.playbackState]);
 
   function updateProgress(val: number) {
     setProgress(val);

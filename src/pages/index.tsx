@@ -16,6 +16,9 @@ export default function Home() {
     if (!spotify.ready) return;
 
     updatePlaybackState(spotify.api, dispatch);
+    const interval = setInterval(() => updatePlaybackState(spotify.api, dispatch), 2000);
+
+    return () => clearInterval(interval);
   }, [spotify.ready]);
 
   const bottomBarHeight = 6;
