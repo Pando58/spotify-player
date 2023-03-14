@@ -12,15 +12,27 @@ body {
   }
 
   input[type="range"].slider::-webkit-slider-thumb {
-    @apply appearance-none w-2.5 h-2.5 rounded-full bg-white;
+    @apply appearance-none rounded-full bg-white;
   }
 
   input[type="range"].slider::-moz-range-thumb {
-    @apply appearance-none w-2.5 h-2.5 rounded-full bg-white;
+    @apply appearance-none rounded-full bg-white;
   }
 
   input[type="range"].slider::-ms-thumb {
-    @apply appearance-none w-2.5 h-2.5 rounded-full bg-white;
+    @apply appearance-none rounded-full bg-white;
+  }
+
+  input[type="range"].slider:hover::-webkit-slider-thumb {
+    @apply w-2.5 h-2.5;
+  }
+
+  input[type="range"].slider:hover::-moz-range-thumb {
+    @apply w-2.5 h-2.5;
+  }
+
+  input[type="range"].slider:hover::-ms-thumb {
+    @apply w-2.5 h-2.5;
   }
 }
 
