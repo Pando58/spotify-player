@@ -48,7 +48,7 @@ export default function Player({
           <div
             className="relative aspect-square shadow-lg shadow-black/50"
             style={{
-              height: barHeight + "rem",
+              height: (barHeight - 2.5) + "rem",
             }}
           >
             {(appCtx.playbackState?.item?.type === "track" && appCtx.playbackState.item.album.images?.[0].url) && (
