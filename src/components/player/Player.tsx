@@ -83,11 +83,11 @@ export default function Player({
             </button>
           </div>
           <div className="mb-1 flex items-center gap-2">
-            <span>{msToSongTime(progress)}</span>
+            <span className="w-[6ch] text-right">{msToSongTime(progress)}</span>
             <div className="w-[40vw]">
               <ProgressBar progress={progress} updateProgress={updateProgress} />
             </div>
-            <span>{msToSongTime(appCtx.playbackState?.item?.duration_ms || 0)}</span>
+            <span className="w-[6ch]">{msToSongTime(appCtx.playbackState?.item?.duration_ms || 0)}</span>
           </div>
         </div>
 
