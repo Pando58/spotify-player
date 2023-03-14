@@ -42,11 +42,15 @@ export default function Player({
   return (
     <div
       className="absolute inset-x-0 bottom-0 overflow-hidden border-t border-zinc-850 bg-zinc-900/50 shadow-t-lg shadow-black/20 backdrop-blur-lg"
-      style={{ height: barHeight + "rem" }}
     >
-      <div className="flex h-full text-xs font-medium text-white/70">
+      <div className="flex h-full flex-wrap text-xs font-medium text-white/70">
         <div className="flex h-full flex-1 p-5">
-          <div className="relative aspect-square h-full shadow-lg shadow-black/50">
+          <div
+            className="relative aspect-square shadow-lg shadow-black/50"
+            style={{
+              height: barHeight + "rem",
+            }}
+          >
             {(appCtx.playbackState?.item?.type === "track" && appCtx.playbackState.item.album.images?.[0].url) && (
               <Image src={appCtx.playbackState.item.album.images[0].url} fill sizes="128px" alt="playing track cover image" />
             )}
@@ -57,7 +61,7 @@ export default function Player({
           </div>
         </div>
 
-        <div className="flex flex-col justify-center gap-2">
+        <div className="flex w-screen flex-col justify-center gap-2 sm:w-auto">
           <div className="flex justify-center gap-4">
             <button
               className="hover:text-white"
@@ -84,7 +88,7 @@ export default function Player({
           </div>
           <div className="mb-1 flex items-center gap-2">
             <span className="w-[6ch] text-right">{msToSongTime(progress)}</span>
-            <div className="w-[40vw]">
+            <div className="w-full sm:w-[40vw]">
               <ProgressBar progress={progress} updateProgress={updateProgress} />
             </div>
             <span className="w-[6ch]">{msToSongTime(appCtx.playbackState?.item?.duration_ms || 0)}</span>
@@ -97,6 +101,7 @@ export default function Player({
             <div className="mr-2">
               <RepeatButton />
             </div>
+            <div className="flex-1 sm:flex-none" />
             <VolumeSlider />
           </div>
         </div>
