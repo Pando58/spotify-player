@@ -10,7 +10,7 @@ export function usePlaybackProgress() {
   const [startProgress, setStartProgress] = useState<number | null>(null);
 
   useEffect(() => {
-    if (!spotify.ready || appCtx.playbackState === null) return;
+    if (!spotify.ready || !appCtx.playbackState || !appCtx.playbackState.is_playing) return;
 
     if (startProgress === null) {
       setStartProgress(appCtx.playbackState.progress_ms);
@@ -19,9 +19,6 @@ export function usePlaybackProgress() {
 
     const fetchTime = Date.now();
     const duration = appCtx.playbackState.item?.duration_ms;
-
-    if (!startProgress || !duration) return;
-
     const startOffset = 1000 - (startProgress % 1000);
     let count = 0;
     let timeout: NodeJS.Timeout;
@@ -29,7 +26,7 @@ export function usePlaybackProgress() {
     setProgress(startProgress);
 
     function update() {
-      if (!startProgress || !duration) return;
+      if (startProgress === null || typeof duration !== "number") return;
 
       setProgress(Math.min(duration, startProgress + (Date.now() - fetchTime)));
 
@@ -42,6 +39,12 @@ export function usePlaybackProgress() {
 
     return () => clearTimeout(timeout);
   }, [spotify.ready, appCtx.playbackState, startProgress]);
+
+  useEffect(() => {
+    if (!appCtx.playbackState) return;
+
+    setStartProgress(appCtx.playbackState.progress_ms);
+  }, [appCtx.playbackState?.is_playing]);
 
   function updateProgress(val: number) {
     setProgress(val);
