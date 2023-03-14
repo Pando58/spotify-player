@@ -1,6 +1,7 @@
 import { BackwardIcon, ForwardIcon, PlayIcon, PauseIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import { useContext } from "react";
+import ProgressBar from "./ProgressBar";
 import RepeatButton from "./RepeatButton";
 import ShuffleButton from "./ShuffleButton";
 import VolumeSlider from "./volumeSlider";
@@ -18,7 +19,7 @@ export default function Player({
   const appCtx = useContext(AppContext);
   const dispatch = useContext(AppDispatchContext);
   const spotify = useSpotify();
-  const progress = usePlaybackProgress();
+  const { progress, updateProgress } = usePlaybackProgress();
 
   function play() {
     if (appCtx.playbackState?.is_playing) {
@@ -55,6 +56,7 @@ export default function Player({
             <div>{appCtx.playbackState?.item?.type === "track" && appCtx.playbackState.item.artists.map((i => i.name)).join(", ")}</div>
           </div>
         </div>
+
         <div className="flex flex-col justify-center gap-2">
           <div className="flex justify-center gap-4">
             <button
@@ -82,17 +84,13 @@ export default function Player({
           </div>
           <div className="mb-1 flex items-center gap-2">
             <span>{msToSongTime(progress)}</span>
-            <div className="h-1 w-[40vw] rounded-full bg-gray-500">
-              <div
-                className="h-full rounded-full bg-white"
-                style={{
-                  width: (progress / (appCtx.playbackState?.item?.duration_ms || 1) * 100) + "%",
-                }}
-              />
+            <div className="w-[40vw]">
+              <ProgressBar progress={progress} updateProgress={updateProgress} />
             </div>
             <span>{msToSongTime(appCtx.playbackState?.item?.duration_ms || 0)}</span>
           </div>
         </div>
+
         <div className="flex-1 p-5">
           <div className="flex h-full items-center justify-end gap-2">
             <ShuffleButton />

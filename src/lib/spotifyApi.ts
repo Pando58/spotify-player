@@ -146,14 +146,17 @@ export const spotifyApi = (() => {
       offset?: { position: number } | { uri: string };
     } | {
       uris: string[];
-    }) {
+    }, position?: number) {
       const response = await fetch("https://api.spotify.com/v1/me/player/play", {
         method: "PUT",
         headers: {
           "Authorization": "Bearer " + accessToken,
           "Content-Type": "application/json",
         },
-        body: params && JSON.stringify(params),
+        body: JSON.stringify(({
+          ...params,
+          ...(typeof position === "number" && { position_ms: position }),
+        })),
       });
 
       if (!response.ok) {

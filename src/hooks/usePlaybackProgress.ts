@@ -7,12 +7,17 @@ export function usePlaybackProgress() {
   const spotify = useSpotify();
 
   const [progress, setProgress] = useState(0);
+  const [startProgress, setStartProgress] = useState<number | null>(null);
 
   useEffect(() => {
     if (!spotify.ready || appCtx.playbackState === null) return;
 
+    if (startProgress === null) {
+      setStartProgress(appCtx.playbackState.progress_ms);
+      return;
+    }
+
     const fetchTime = Date.now();
-    const startProgress = appCtx.playbackState.progress_ms;
     const duration = appCtx.playbackState.item?.duration_ms;
 
     if (!startProgress || !duration) return;
@@ -36,7 +41,15 @@ export function usePlaybackProgress() {
     timeout = setTimeout(update, startOffset);
 
     return () => clearTimeout(timeout);
-  }, [spotify.ready, appCtx.playbackState]);
+  }, [spotify.ready, appCtx.playbackState, startProgress]);
 
-  return progress;
+  function updateProgress(val: number) {
+    setProgress(val);
+    setStartProgress(val);
+  }
+
+  return {
+    progress,
+    updateProgress,
+  };
 }

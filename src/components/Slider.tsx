@@ -1,4 +1,5 @@
-import { useState } from "react";
+import type { ChangeEvent } from "react";
+import { useEffect, useState } from "react";
 import { mapRange } from "@/lib/mapRange";
 
 export default function Slider({
@@ -12,15 +13,16 @@ export default function Slider({
   val?: number;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }) {
-  const [value, setValue] = useState(processValue(val || 0));
+  const [value, setValue] = useState(val);
+  const [holding, setHolding] = useState(false);
 
-  function processValue(v: number) {
-    return Math.min(Math.max(v, min), max);
-  }
-
-  function inputChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const val = processValue(Number(e.target.value));
+  useEffect(() => {
+    if (holding) return;
     setValue(val);
+  }, [val, holding]);
+
+  function inputChange(e: ChangeEvent<HTMLInputElement>) {
+    setValue(Number(e.target.value));
     onChange?.(e);
   }
 
@@ -30,17 +32,19 @@ export default function Slider({
         <div
           className="h-full rounded-full bg-white"
           style={{
-            width: mapRange(value, min, max, 0, 100) + "%",
+            width: mapRange(value || 0, min, max, 0, 100) + "%",
           }}
         />
       </div>
       <input
         type="range"
-        className="slider range-sm absolute top-0 left-0 h-1 w-full"
+        className="slider absolute top-0 left-0 h-1 w-full"
         value={value}
         min={min}
         max={max}
         onChange={inputChange}
+        onPointerDown={() => setHolding(true)}
+        onPointerUp={() => setHolding(false)}
       />
     </div>
   );
