@@ -28,7 +28,11 @@ export default function Home() {
     <AppContext.Provider value={appCtx}>
       <AppDispatchContext.Provider value={dispatch}>
         <Head>
-          <title>Create Next App</title>
+          <title>{
+            appCtx.playbackState?.item
+              ? appCtx.playbackState.item.name + " • Spotify Player"
+              : "Spotify Player"
+          }</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <div className="flex h-screen">
