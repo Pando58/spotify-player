@@ -1,5 +1,6 @@
 import { Bars3Icon, ChevronDownIcon } from "@heroicons/react/20/solid";
-import { HeartIcon, HomeIcon, MagnifyingGlassIcon, PlusIcon, QueueListIcon } from "@heroicons/react/24/outline";
+import { HomeIcon } from "@heroicons/react/24/outline";
+// import { HeartIcon, HomeIcon, MagnifyingGlassIcon, PlusIcon, QueueListIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { signOut, useSession } from "next-auth/react";
 import React, { useContext, useMemo, useState } from "react";
@@ -29,14 +30,25 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
       type: "setViewingPlaylist",
       playlistId: id,
     });
+
+    dispatch?.({
+      type: "setActiveView",
+      view: "tracklist",
+    });
   }
 
   const entries = useMemo(() => ([
     {
       icon: <HomeIcon />,
       text: "Home",
+      action: () => {
+        dispatch?.({
+          type: "setActiveView",
+          view: "home",
+        });
+      },
     },
-    {
+    /* {
       icon: <MagnifyingGlassIcon />,
       text: "Search",
     },
@@ -54,7 +66,7 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
     {
       icon: <HeartIcon />,
       text: "Liked Songs",
-    },
+    }, */
     {
       separator: true,
     },
@@ -105,12 +117,15 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
               )}
             </button>
             <ul>
-              {entries.map(({ icon, text, separator }, i) => (
+              {entries.map(({ icon, text, action, separator }, i) => (
                 <li key={i}>
                   {separator ? (
                     <hr className="my-3 mx-4 border-zinc-750" />
                   ) : (
-                    <button className="flex w-full items-center gap-2 py-2 px-4 duration-75 hover:text-zinc-100">
+                    <button
+                      className="flex w-full items-center gap-2 py-2 px-4 duration-75 hover:text-zinc-100"
+                      onClick={action}
+                    >
                       <div className="w-4 lg:w-5">{icon}</div>
                       <span>{text}</span>
                     </button>
@@ -120,7 +135,7 @@ export function Sidebar({ bottomSpace }: { bottomSpace: number }) {
               {playlists.map(({ name, id }, i) => (
                 <li key={i}>
                   <button
-                    className="flex w-full items-center gap-2 py-2 px-4 text-left font-medium text-zinc-400 duration-75 hover:text-zinc-100"
+                    className="flex w-full items-center gap-2 py-2 px-4 text-left text-zinc-400 duration-75 hover:text-zinc-100"
                     onClick={() => clickPlaylist(id)}
                   >
                     <span>{name}</span>

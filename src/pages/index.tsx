@@ -1,7 +1,8 @@
 import Head from "next/head";
 import { useContext, useEffect, useReducer } from "react";
-import MainContainer from "@/components/MainContainer";
 import { Sidebar } from "@/components/Sidebar";
+import TracklistView from "@/components/TracklistView";
+import HomeView from "@/components/homeView/HomeView";
 import Player from "@/components/player/Player";
 import { appContextReducer, AppDispatchContext, AppContext } from "@/context/appContext";
 import { useSpotify } from "@/hooks/useSpotify";
@@ -35,7 +36,10 @@ export default function Home() {
             <Sidebar bottomSpace={bottomBarHeight} />
           </div>
           <div className="flex-1">
-            <MainContainer bottomSpace={bottomBarHeight} />
+            {{
+              home: <HomeView bottomSpace={bottomBarHeight} />,
+              tracklist: <TracklistView bottomSpace={bottomBarHeight} />,
+            }[appCtx.activeView]}
           </div>
         </div>
         <Player barHeight={bottomBarHeight} />

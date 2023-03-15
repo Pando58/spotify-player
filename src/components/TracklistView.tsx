@@ -10,7 +10,7 @@ import { useSpotify } from "@/hooks/useSpotify";
 import { msToSongTime } from "@/lib/msToSongTime";
 import { updatePlaybackState } from "@/lib/updatePlaybackState";
 
-export default function MainContainer({ bottomSpace }: { bottomSpace: number }) {
+export default function TracklistView({ bottomSpace }: { bottomSpace: number }) {
   const appCtx = useContext(AppContext);
   const dispatch = useContext(AppDispatchContext);
   const [playlist, setPlaylist] = useState<SpotifyApi.SinglePlaylistResponse>();
