@@ -12,7 +12,10 @@
   "rules": {
     "indent": [
       "warn",
-      2
+      2,
+      {
+        "SwitchCase": 1
+      }
     ],
     "quotes": [
       "warn",
@@ -22,7 +25,8 @@
       "warn",
       "always-multiline"
     ],
-    "semi": "warn",
+    "@typescript-eslint/semi": "warn",
+    "@typescript-eslint/member-delimiter-style": "warn",
     "eol-last": "warn",
     "no-multiple-empty-lines": [
       "warn",
@@ -39,6 +43,7 @@
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "import/newline-after-import": "warn",
     "import/no-duplicates": "warn",
     "import/order": [
@@ -50,6 +55,7 @@
         "newlines-between": "never"
       }
     ],
-    "tailwindcss/classnames-order": "warn"
+    "tailwindcss/classnames-order": "warn",
+    "react-hooks/exhaustive-deps": "off"
   }
 }
